@@ -249,6 +249,8 @@ git push
 
 Mastering these 5 commands will handle 90% of daily Git work. Other commands can be learned gradually as needed.
 
+<br>
+
 ## Recommended Tools
 
 ### Enhanced Git Prompt: bash-git-prompt
