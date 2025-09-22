@@ -248,3 +248,35 @@ git push
 5. `git pull` - Pull from remote
 
 Mastering these 5 commands will handle 90% of daily Git work. Other commands can be learned gradually as needed.
+
+## Recommended Tools
+
+### Enhanced Git Prompt: bash-git-prompt
+
+**Repository:** https://github.com/magicmonty/bash-git-prompt
+
+**Why it's recommended:**
+
+The bash-git-prompt is an excellent tool that significantly enhances your Git workflow by providing:
+
+- **Visual Git Status**: Shows current branch, commit status, and repository state directly in your terminal prompt
+- **Color-coded Information**: Uses colors to quickly identify:
+  - Current branch name
+  - Modified, staged, and untracked files
+  - Ahead/behind status with remote
+  - Stash count
+  - Merge/rebase status
+- **Real-time Feedback**: No need to constantly run `git status` - the information is always visible
+- **Customizable Themes**: Multiple built-in themes and easy customization options
+- **Performance Optimized**: Fast and lightweight, won't slow down your terminal
+
+**Installation:**
+```bash
+# Clone the repository
+git clone https://github.com/magicmonty/bash-git-prompt.git ~/.bash-git-prompt
+
+# Add to your ~/.bashrc or ~/.bash_profile
+echo "source ~/.bash-git-prompt/gitprompt.sh" >> ~/.bashrc
+```
+
+This tool is particularly valuable for beginners as it provides constant visual feedback about your Git repository state, helping you understand Git concepts better and reducing the need to remember complex command combinations.
