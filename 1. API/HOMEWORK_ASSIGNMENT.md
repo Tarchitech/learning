@@ -18,7 +18,10 @@ The repository name has been changed from `learning-git` to `learning`. You need
 
 ### Requirements:
 
-Create a weather application that displays weather information for your city.
+Create a weather application that displays weather information for your city.<br>
+[US National Weather Service(free)](https://www.weather.gov/documentation/services-web-api?ref=public_apis&utm_medium=website)<br>
+[Canadian weather service(free)](https://api.weather.gc.ca/)
+
 
 #### Core Features:
 1. **Current Temperature**: Show the current temperature for your city
