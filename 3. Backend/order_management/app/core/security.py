@@ -1,12 +1,12 @@
 """
 Security utilities for validation and data protection.
 """
-from pydantic import EmailStr
+from pydantic import EmailStr, TypeAdapter
 
 
 def validate_email(email: str) -> bool:
     """
-    Validate email format.
+    Validate email format using Pydantic v2 EmailStr validator.
     
     Args:
         email: Email address to validate
@@ -15,7 +15,9 @@ def validate_email(email: str) -> bool:
         bool: True if email is valid, False otherwise
     """
     try:
-        EmailStr.validate(email)
+        # In Pydantic v2, use TypeAdapter to validate EmailStr
+        email_adapter = TypeAdapter(EmailStr)
+        email_adapter.validate_python(email)
         return True
     except Exception:
         return False

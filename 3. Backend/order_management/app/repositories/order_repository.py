@@ -158,6 +158,6 @@ class OrderRepository(BaseRepository[Order]):
         Returns:
             Optional[Order]: Updated order or None if not found
         """
-        from datetime import datetime
-        return self.update(id, {"status": status, "updated_at": datetime.utcnow()})
+        from datetime import datetime, timezone
+        return self.update(id, {"status": status, "updated_at": datetime.now(timezone.utc)})
 
