@@ -1,0 +1,420 @@
+{
+  "major_cities": {
+    "total": 35,
+    "passed": 35,
+    "failed": 0,
+    "success_rate": 100.0,
+    "details": {
+      "montreal": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "qc-147",
+        "messages": {
+          "code": "Found code: qc-147",
+          "weather": "Weather data fetched for Montr\u00e9al",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "montr\u00e9al": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "qc-147",
+        "messages": {
+          "code": "Found code: qc-147",
+          "weather": "Weather data fetched for Montr\u00e9al",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "quebec": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "qc-133",
+        "messages": {
+          "code": "Found code: qc-133",
+          "weather": "Weather data fetched for Qu\u00e9bec",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "qu\u00e9bec": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "qc-133",
+        "messages": {
+          "code": "Found code: qc-133",
+          "weather": "Weather data fetched for Qu\u00e9bec",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "longueuil": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "qc-109",
+        "messages": {
+          "code": "Found code: qc-109",
+          "weather": "Weather data fetched for Longueuil",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "laval": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "qc-76",
+        "messages": {
+          "code": "Found code: qc-76",
+          "weather": "Weather data fetched for Laval",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "sherbrooke": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "qc-136",
+        "messages": {
+          "code": "Found code: qc-136",
+          "weather": "Weather data fetched for Sherbrooke",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "toronto": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "on-143",
+        "messages": {
+          "code": "Found code: on-143",
+          "weather": "Weather data fetched for Toronto",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "ottawa": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "on-52",
+        "messages": {
+          "code": "Found code: on-52",
+          "weather": "Weather data fetched for Ottawa (Richmond - Metcalfe)",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "hamilton": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "on-77",
+        "messages": {
+          "code": "Found code: on-77",
+          "weather": "Weather data fetched for Hamilton",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "london": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "on-137",
+        "messages": {
+          "code": "Found code: on-137",
+          "weather": "Weather data fetched for London",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "kitchener": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "on-82",
+        "messages": {
+          "code": "Found code: on-82",
+          "weather": "Weather data fetched for Kitchener-Waterloo",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "waterloo": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "on-82",
+        "messages": {
+          "code": "Found code: on-82",
+          "weather": "Weather data fetched for Kitchener-Waterloo",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "windsor": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "ns-15",
+        "messages": {
+          "code": "Found code: ns-15",
+          "weather": "Weather data fetched for Windsor",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "vancouver": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "bc-74",
+        "messages": {
+          "code": "Found code: bc-74",
+          "weather": "Weather data fetched for Vancouver",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "richmond": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "bc-96",
+        "messages": {
+          "code": "Found code: bc-96",
+          "weather": "Weather data fetched for Richmond",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "abbotsford": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "bc-81",
+        "messages": {
+          "code": "Found code: bc-81",
+          "weather": "Weather data fetched for Abbotsford",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "calgary": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "ab-52",
+        "messages": {
+          "code": "Found code: ab-52",
+          "weather": "Weather data fetched for Calgary",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "edmonton": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "ab-50",
+        "messages": {
+          "code": "Found code: ab-50",
+          "weather": "Weather data fetched for Edmonton",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "red deer": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "ab-29",
+        "messages": {
+          "code": "Found code: ab-29",
+          "weather": "Weather data fetched for Red Deer",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "lethbridge": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "ab-30",
+        "messages": {
+          "code": "Found code: ab-30",
+          "weather": "Weather data fetched for Lethbridge",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "winnipeg": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "mb-36",
+        "messages": {
+          "code": "Found code: mb-36",
+          "weather": "Weather data fetched for Winnipeg (The Forks)",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "brandon": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "mb-52",
+        "messages": {
+          "code": "Found code: mb-52",
+          "weather": "Weather data fetched for Brandon",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "steinbach": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "mb-13",
+        "messages": {
+          "code": "Found code: mb-13",
+          "weather": "Weather data fetched for Steinbach",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "saskatoon": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "sk-40",
+        "messages": {
+          "code": "Found code: sk-40",
+          "weather": "Weather data fetched for Saskatoon",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "regina": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "sk-32",
+        "messages": {
+          "code": "Found code: sk-32",
+          "weather": "Weather data fetched for Regina",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "prince albert": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "sk-27",
+        "messages": {
+          "code": "Found code: sk-27",
+          "weather": "Weather data fetched for Prince Albert",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "moose jaw": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "sk-24",
+        "messages": {
+          "code": "Found code: sk-24",
+          "weather": "Weather data fetched for Moose Jaw",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "halifax": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "ns-19",
+        "messages": {
+          "code": "Found code: ns-19",
+          "weather": "Weather data fetched for Halifax",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "sydney": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "ns-31",
+        "messages": {
+          "code": "Found code: ns-31",
+          "weather": "Weather data fetched for Sydney",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "moncton": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "nb-36",
+        "messages": {
+          "code": "Found code: nb-36",
+          "weather": "Weather data fetched for Moncton",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "fredericton": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "nb-29",
+        "messages": {
+          "code": "Found code: nb-29",
+          "weather": "Weather data fetched for Fredericton",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "corner brook": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "nl-41",
+        "messages": {
+          "code": "Found code: nl-41",
+          "weather": "Weather data fetched for Corner Brook",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "yellowknife": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "nt-24",
+        "messages": {
+          "code": "Found code: nt-24",
+          "weather": "Weather data fetched for Yellowknife",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      },
+      "rankin inlet": {
+        "code_lookup": true,
+        "weather_fetch": true,
+        "forecast_fetch": true,
+        "city_code": "nu-28",
+        "messages": {
+          "code": "Found code: nu-28",
+          "weather": "Weather data fetched for Rankin Inlet",
+          "forecast": "Forecast data fetched: 3 days"
+        }
+      }
+    }
+  },
+  "mapping_coverage": {
+    "total_mapped": 499,
+    "tested": 50,
+    "working": 50,
+    "failed": 0,
+    "success_rate": 100.0
+  },
+  "accent_support": {
+    "total": 4,
+    "passed": 4,
+    "failed": 0,
+    "success_rate": 100.0,
+    "details": {
+      "montreal/montr\u00e9al": true,
+      "quebec/qu\u00e9bec": true,
+      "montreal/Montr\u00e9al": true,
+      "quebec/Qu\u00e9bec": true
+    }
+  },
+  "overall_stats": {
+    "total_cities_mapped": 499,
+    "major_cities_success_rate": 100.0,
+    "mapping_success_rate": 100.0,
+    "accent_success_rate": 100.0
+  }
+}
