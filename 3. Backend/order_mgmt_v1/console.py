@@ -9,9 +9,11 @@ The console interface allows users to:
 2. Create a new product
 3. Create a new order
 4. List orders for a user
+5. List all users
+6. List all products
 """
 
-from db_operations import create_user, create_product, create_order, list_orders
+from db_operations import create_user, create_product, create_order, list_users, list_products, list_orders
 
 
 def print_menu():
@@ -22,8 +24,10 @@ def print_menu():
     print("1. Create a new user")
     print("2. Create a new product")
     print("3. Create a new order")
-    print("4. List orders for a user")
-    print("5. Exit")
+    print("4. List all users")
+    print("5. List all products")
+    print("6. List orders for a user")
+    print("0. Exit")
     print("="*50)
 
 
@@ -176,6 +180,82 @@ def handle_list_orders():
                       f"{item['quantity']} x ${item['price_cents_at_purchase'] / 100:.2f}")
 
 
+def handle_list_users():
+    """
+    Handle listing all users from console input.
+    
+    Calls list_users() to retrieve all users from the database.
+    If the function is not implemented, prompts the user to implement it first.
+    """
+    print("\n--- List All Users ---")
+    
+    try:
+        # Call database operation function
+        # This will query the database and return all users
+        result = list_users()
+        
+        # Display result
+        print(f"\n📋 Found {result['total']} user(s) in the database:")
+        
+        if result['total'] == 0:
+            print("   No users found.")
+        else:
+            # Display each user's information
+            for user in result['users']:
+                print(f"\n   User ID: {user['id']}")
+                print(f"   Email: {user['email']}")
+                print(f"   Full Name: {user['full_name']}")
+                print(f"   Created At: {user['created_at']}")
+    
+    except AttributeError:
+        # Handle case where function exists but is not fully implemented
+        print("\n⚠️  The list_users() function is not yet fully implemented.")
+        print("   Please complete the implementation in db_operations.py first.")
+    except Exception as e:
+        # Handle any other unexpected errors
+        print(f"\n❌ An error occurred while listing users: {e}")
+        print("   Please check the database connection and try again.")
+
+
+def handle_list_products():
+    """
+    Handle listing all products from console input.
+    
+    Calls list_products() to retrieve all products from the database.
+    If the function is not implemented, prompts the user to implement it first.
+    """
+    print("\n--- List All Products ---")
+    
+    try:
+        # Call database operation function
+        # This will query the database and return all products
+        result = list_products()
+        
+        # Display result
+        print(f"\n📋 Found {result['total']} product(s) in the database:")
+        
+        if result['total'] == 0:
+            print("   No products found.")
+        else:
+            # Display each product's information
+            for product in result['products']:
+                print(f"\n   Product ID: {product['id']}")
+                print(f"   Name: {product['name']}")
+                # Convert price from cents to dollars for display
+                # For example: 249999 cents = $2499.99
+                price_dollars = product['price_cents'] / 100
+                print(f"   Price: ${price_dollars:.2f}")
+    
+    except AttributeError:
+        # Handle case where function exists but is not fully implemented
+        print("\n⚠️  The list_products() function is not yet fully implemented.")
+        print("   Please complete the implementation in db_operations.py first.")
+    except Exception as e:
+        # Handle any other unexpected errors
+        print(f"\n❌ An error occurred while listing products: {e}")
+        print("   Please check the database connection and try again.")
+
+
 def main():
     """
     Main function that runs the console interface.
@@ -191,7 +271,7 @@ def main():
         print_menu()
         
         # Get user choice
-        choice = input("\nEnter your choice (1-5): ").strip()
+        choice = input("\nEnter your choice (0-6): ").strip()
         
         # Handle user choice
         if choice == "1":
@@ -201,12 +281,16 @@ def main():
         elif choice == "3":
             handle_create_order()
         elif choice == "4":
-            handle_list_orders()
+            handle_list_users()
         elif choice == "5":
+            handle_list_products()
+        elif choice == "6":
+            handle_list_orders()
+        elif choice == "0":
             print("\n👋 Goodbye!")
             break
         else:
-            print("\n❌ Invalid choice. Please enter a number between 1 and 5.")
+            print("\n❌ Invalid choice. Please enter a number between 0 and 6.")
 
 
 if __name__ == "__main__":

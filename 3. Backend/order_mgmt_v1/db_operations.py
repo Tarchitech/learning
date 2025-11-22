@@ -45,7 +45,7 @@ def create_user(email: str, full_name: str) -> dict:
         new_user = Users(
             email=email,
             full_name=full_name,
-            created_at=datetime.now(timezone.utc)  # Set current timestamp
+            # created_at=datetime.now(timezone.utc)  # Set current timestamp
         )
         
         # Add the user to the session (stages it for insertion)
@@ -153,6 +153,106 @@ def create_order(user_id: int, status: str, items: list) -> dict:
         # Always close the session
         db.close()
 
+
+def list_users() -> dict:
+    """
+    List all users in the database.
+    
+    This function retrieves all users from the database and returns them
+    in a dictionary format. It's useful for displaying all registered users
+    or checking what users exist in the system.
+    
+    Returns:
+        Dictionary containing:
+        {
+            "users": list of user dictionaries,
+            "total": int (count of users)
+        }
+        
+        Each user dictionary contains:
+        {
+            "id": int,
+            "email": str,
+            "full_name": str,
+            "created_at": str (ISO format) or None
+        }
+    """
+    # Create a new database session
+    # Each function call gets its own session to ensure data consistency
+    db = get_db()
+    
+    try:
+        # Query all users from the database
+        # db.query(Users): Start a query targeting the Users model/table
+        # .all(): Execute the query and return all matching records as a list
+        # This will return a list of Users ORM objects
+
+
+        # Convert ORM objects to dictionaries for easier handling
+        # We need to iterate through each user object and extract its attributes
+        users_list = []
+
+
+        # Return the result as a dictionary
+        # This format is consistent with other list functions in this module
+        return {
+            "users": users_list,  # List of user dictionaries
+            "total": len(users_list)  # Total count of users
+        }
+    finally:
+        # Always close the session, even if an error occurs
+        # This ensures database connections are properly released
+        # If we don't close the session, we could run out of database connections
+        db.close()
+
+def list_products() -> dict:
+    """
+    List all products in the database.
+    
+    This function retrieves all products from the database and returns them
+    in a dictionary format. It's useful for displaying the product catalog
+    or checking what products are available in the system.
+    
+    Returns:
+        Dictionary containing:
+        {
+            "products": list of product dictionaries,
+            "total": int (count of products)
+        }
+        
+        Each product dictionary contains:
+        {
+            "id": int,
+            "name": str,
+            "price_cents": int (price in cents, e.g., 2499 = $24.99)
+        }
+    """
+    # Create a new database session
+    # Each function call gets its own session to ensure data consistency
+    db = get_db()
+    
+    try:
+        # Query all products from the database
+        # db.query(Products): Start a query targeting the Products model/table
+        # .all(): Execute the query and return all matching records as a list
+        # This will return a list of Products ORM objects
+
+
+        # Convert ORM objects to dictionaries for easier handling
+        # We need to iterate through each product object and extract its attributes
+        products_list = []
+        
+        # Return the result as a dictionary
+        # This format is consistent with other list functions in this module
+        return {
+            "products": products_list,  # List of product dictionaries
+            "total": len(products_list)  # Total count of products
+        }
+    finally:
+        # Always close the session, even if an error occurs
+        # This ensures database connections are properly released
+        # If we don't close the session, we could run out of database connections
+        db.close()
 
 def list_orders(user_id: int) -> dict:
     """
