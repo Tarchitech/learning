@@ -10,6 +10,7 @@ This module contains the core database operation functions:
 These functions handle all database interactions using SQLAlchemy ORM.
 """
 from datetime import datetime, timezone
+from sqlalchemy.orm import joinedload
 from database import get_db
 # Import models - using the generated model names (Users, Products, Orders, OrderItems)
 from models import Users, Products, Orders, OrderItems
@@ -45,7 +46,7 @@ def create_user(email: str, full_name: str) -> dict:
         new_user = Users(
             email=email,
             full_name=full_name,
-            # created_at=datetime.now(timezone.utc)  # Set current timestamp
+            created_at=datetime.now(timezone.utc)  # Set current timestamp
         )
         
         # Add the user to the session (stages it for insertion)
@@ -93,9 +94,21 @@ def create_product(name: str, price_cents: int) -> dict:
     
     try:
         # Create a new Products object
+        new_product = Products(
+            name=name,
+            price_cents=price_cents
+        )
+        
+        # Add to session and commit
+        db.add(new_product)
+        db.commit()
+        db.refresh(new_product)
         
         # Return product data
         return {
+            "id": new_product.id,
+            "name": new_product.name,
+            "price_cents": new_product.price_cents
         }
     finally:
         # Always close the session
@@ -138,21 +151,77 @@ def create_order(user_id: int, status: str, items: list) -> dict:
         # Step 1: Create the order record
         # We use flush() to get the order ID without committing yet
         # This allows us to link order items to the order before committing
- 
+        new_order = Orders(
+            user_id=user_id,
+            status=status,
+            created_at=datetime.now(timezone.utc)
+        )
+        db.add(new_order)
+        db.flush()  # Gets the order ID from database without committing
+        
+        # Step 2: Initialize variables to track totals
+        total_amount = 0  # Total price in cents for all items
+        total_quantity = 0  # Total number of items
+        items_list = []  # List to store item data for response
+        
+        # Step 3: Create order items for each product in the order
+        for item_data in items:
+            # Fetch the product to get its current price
+            # This ensures we capture the price at the time of purchase
+            product = db.query(Products).filter(Products.id == item_data["product_id"]).first()
+            
+            # Calculate total price for this line item (unit price * quantity)
+            price_at_purchase = product.price_cents * item_data["quantity"]
+            
+            # Create the order item record
+            # We store price_at_purchase so we remember what was charged
+            # even if product price changes later
+            order_item = OrderItems(
+                order_id=new_order.id,  # Link to the order we just created
+                product_id=item_data["product_id"],
+                quantity=item_data["quantity"],
+                price_cents_at_purchase=price_at_purchase
+            )
+            db.add(order_item)
+            
+            # Update running totals
+            total_amount += price_at_purchase
+            total_quantity += item_data["quantity"]
+            
+            # Store item data for response (ID will be added after commit)
+            items_list.append({
+                "product_id": order_item.product_id,
+                "quantity": order_item.quantity,
+                "price_cents_at_purchase": order_item.price_cents_at_purchase,
+                "product_name": product.name if product else None
+            })
+        
+        # Step 4: Commit all changes to database (order + all items in one transaction)
+        # This ensures atomicity - either all items are saved or none are
+        db.commit()
+        
+        # Reload order with items to get all database-assigned IDs
+        db.refresh(new_order)
+        new_order = db.query(Orders).filter(Orders.id == new_order.id).first()
+        
+        # Add IDs to items_list after they've been assigned by database
+        # Note: Generated model uses 'order_items' relationship name
+        for i, db_item in enumerate(new_order.order_items):
+            items_list[i]["id"] = db_item.id
+        
         # Return order data with calculated totals
         return {
-            "id": None,
-            "user_id": None,
-            "status": None,
-            "created_at": None,
-            "items": None,
-            "total_amount_cents": None,
-            "total_quantity": None
+            "id": new_order.id,
+            "user_id": new_order.user_id,
+            "status": new_order.status,
+            "created_at": new_order.created_at.isoformat() if new_order.created_at else None,
+            "items": items_list,
+            "total_amount_cents": total_amount,
+            "total_quantity": total_quantity
         }
     finally:
         # Always close the session
         db.close()
-
 
 def list_users() -> dict:
     """
@@ -186,13 +255,24 @@ def list_users() -> dict:
         # db.query(Users): Start a query targeting the Users model/table
         # .all(): Execute the query and return all matching records as a list
         # This will return a list of Users ORM objects
-
-
+        users = db.query(Users).all()
+        
         # Convert ORM objects to dictionaries for easier handling
         # We need to iterate through each user object and extract its attributes
         users_list = []
-
-
+        for user in users:
+            # For each user object, create a dictionary with its data
+            # This makes it easier to work with the data (e.g., for JSON serialization)
+            user_dict = {
+                "id": user.id,  # Get the user's ID (primary key)
+                "email": user.email,  # Get the user's email address
+                "full_name": user.full_name,  # Get the user's full name
+                # Convert created_at to ISO format string if it exists, otherwise None
+                # ISO format is a standard date/time format (e.g., "2024-01-15T10:30:00")
+                "created_at": user.created_at.isoformat() if user.created_at else None
+            }
+            users_list.append(user_dict)
+        
         # Return the result as a dictionary
         # This format is consistent with other list functions in this module
         return {
@@ -236,11 +316,23 @@ def list_products() -> dict:
         # db.query(Products): Start a query targeting the Products model/table
         # .all(): Execute the query and return all matching records as a list
         # This will return a list of Products ORM objects
-
-
+        products = db.query(Products).all()
+        
         # Convert ORM objects to dictionaries for easier handling
         # We need to iterate through each product object and extract its attributes
         products_list = []
+        for product in products:
+            # For each product object, create a dictionary with its data
+            # This makes it easier to work with the data (e.g., for JSON serialization)
+            product_dict = {
+                "id": product.id,  # Get the product's ID (primary key)
+                "name": product.name,  # Get the product's name
+                # Get the product's price in cents
+                # Note: Price is stored in cents to avoid floating-point precision issues
+                # For example, 249999 cents = $2499.99
+                "price_cents": product.price_cents
+            }
+            products_list.append(product_dict)
         
         # Return the result as a dictionary
         # This format is consistent with other list functions in this module
@@ -291,11 +383,59 @@ def list_orders(user_id: int) -> dict:
         # Query orders for the user with relationships pre-loaded
         # joinedload(Orders.user): Load user data in the same query (for user_name)
         # joinedload(Orders.order_items).joinedload(OrderItems.product): Load all items and their products
-                    
+        # Note: Generated model uses 'order_items' relationship name instead of 'items'
+        # This prevents multiple database queries (N+1 problem)
+        orders = db.query(Orders).options(
+            joinedload(Orders.user),  # Eagerly load user relationship
+            joinedload(Orders.order_items).joinedload(OrderItems.product)  # Eagerly load items and products
+        ).filter(Orders.user_id == user_id).all()
+        
+        # Using Lazy Loading (not recommended, will have performance issues)
+        # orders = db.query(Orders).filter(Orders.user_id == user_id).all()
+
+        # Then accessing relationships will trigger additional queries
+        # for order in orders:
+        #     # This will trigger a query
+        #     user_name = order.user.full_name
+        #     for item in order.order_items:
+        #         product_name = item.product.name
+
+        # Build response list
+        orders_list = []
+        for order in orders:
+            # Calculate totals for this order by summing up all items
+            # Note: Generated model uses 'order_items' relationship name
+            total_amount = sum(item.price_cents_at_purchase for item in order.order_items)
+            total_quantity = sum(item.quantity for item in order.order_items)
+            
+            # Build list of order items with product names
+            items = [
+                {
+                    "id": item.id,
+                    "product_id": item.product_id,
+                    "quantity": item.quantity,
+                    "price_cents_at_purchase": item.price_cents_at_purchase,
+                    "product_name": item.product.name if item.product else None
+                }
+                for item in order.order_items
+            ]
+            
+            # Add order data to response list
+            orders_list.append({
+                "id": order.id,
+                "user_id": order.user_id,
+                "user_name": order.user.full_name if order.user else None,
+                "status": order.status,
+                "created_at": order.created_at.isoformat() if order.created_at else None,
+                "items": items,
+                "total_amount_cents": total_amount,
+                "total_quantity": total_quantity
+            })
+        
         # Return orders list and total count
         return {
-            "orders": None,
-            "total": None
+            "orders": orders_list,
+            "total": len(orders_list)
         }
     finally:
         # Always close the session

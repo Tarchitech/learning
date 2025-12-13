@@ -8,18 +8,21 @@ This is a beginner-friendly version of an order management system designed for t
 
 ## Features
 
-- **Simple Structure**: Organized into separate modules - config, database, models, db_operations, and console
+- **Simple Structure**: Organized into separate modules - config, database, models, db_operations, console, and API
 - **Create Users**: Register new users with email and full name
 - **Create Products**: Add products to the catalog with name and price
 - **Create Orders**: Place orders with multiple items (captures prices at purchase time)
-- **List Orders**: View all orders for a specific user (includes user name and product names)
+- **List Operations**: List all users, products, and orders for a specific user
 - **Console Interface**: Simple text-based interface for user interaction
+- **REST API**: Flask-based REST API with GET and POST endpoints
+- **Postman Collection**: Pre-configured Postman collection for API testing
 - **PostgreSQL Database**: Uses PostgreSQL with SQLAlchemy ORM
 
 ## Technology Stack
 
 - **ORM**: SQLAlchemy 2.0+
 - **Database**: PostgreSQL
+- **Web Framework**: Flask 3.0+
 - **Language**: Python 3.8+
 
 ## Project Structure
@@ -30,7 +33,11 @@ order_mgmt_v1/
 ├── db_operations.py    # Core database operation functions
 ├── database.py         # Database connection and session management
 ├── models.py           # SQLAlchemy ORM models (Users, Products, Orders, OrderItems)
+├── order_api.py        # Flask REST API endpoints
+├── Order_Mgmt_v1_API.postman_collection.json  # Postman collection for API testing
 ├── requirements.txt    # Python dependencies
+├── .env.example        # Example environment variables file
+├── .env                # Environment variables (create from .env.example, not in git)
 ├── README.md           # This file
 └── .gitignore          # Git ignore rules
 ```
@@ -59,11 +66,32 @@ pip install -r requirements.txt
 
 ### 3. Database Configuration
 
-Edit `database.py` and update the database connection string:
+The database connection string is now configured using environment variables for security.
 
-```python
-engine = create_engine('postgresql://user:password@host:port/dbname?sslmode=require')
+**Step 1: Create `.env` file**
+
+Copy the example file and create your own `.env`:
+
+```bash
+cp .env.example .env
 ```
+
+**Step 2: Edit `.env` file**
+
+Open `.env` and set your PostgreSQL connection string:
+
+```bash
+# For local PostgreSQL:
+DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+
+# For Neon.tech or other cloud PostgreSQL (with SSL):
+DATABASE_URL=postgresql://user:password@host:port/dbname?sslmode=require&channel_binding=require
+```
+
+**Important:** 
+- Never commit your `.env` file to git (it's already in `.gitignore`)
+- The `.env.example` file is a template that can be safely committed
+- Make sure your `.env` file is in the same directory as `database.py`
 
 ### 4. Generate Models (If Needed)
 
@@ -94,6 +122,48 @@ The console interface will display a menu with the following options:
 3. Create a new order
 4. List orders for a user
 5. Exit
+
+### 6. Run the Flask API
+
+The project includes a simple Flask REST API (`order_api.py`) that exposes all database operations as HTTP endpoints.
+
+**Start the API server:**
+
+```bash
+python order_api.py
+```
+
+The API will start on `http://localhost:8021` (or the port specified in the code).
+
+**API Endpoints:**
+
+- **GET /users** - List all users
+- **GET /products** - List all products
+- **GET /orders?user_id=X** - List orders for a specific user
+- **POST /users** - Create a new user
+- **POST /products** - Create a new product
+- **POST /orders** - Create a new order
+
+**Example API requests:**
+
+```bash
+# List all products
+curl -X GET http://localhost:8021/products
+
+# Create a user
+curl -X POST http://localhost:8021/users \
+  -H "Content-Type: application/json" \
+  -d '{"email": "john@example.com", "full_name": "John Doe"}'
+
+# Create an order
+curl -X POST http://localhost:8021/orders \
+  -H "Content-Type: application/json" \
+  -d '{"user_id": 1, "status": "pending", "items": [{"product_id": 1, "quantity": 2}]}'
+```
+
+**Postman Collection:**
+
+Import `Order_Mgmt_v1_API.postman_collection.json` into Postman to test all API endpoints with pre-configured requests.
 
 ## Core Database Operations
 
@@ -305,7 +375,7 @@ erDiagram
 
 ### Module Responsibilities
 
-- **database.py**: Creates SQLAlchemy engine and provides `get_db()` function for database sessions
+- **database.py**: Creates SQLAlchemy engine using `DATABASE_URL` from `.env` file and provides `get_db()` function for database sessions
 - **models.py**: Defines ORM models (Users, Products, Orders, OrderItems) with relationships. Can be manually written or generated using `sqlacodegen` from existing database
 - **db_operations.py**: Contains the four core database operation functions
 - **console.py**: Provides console interface for user interaction
@@ -373,11 +443,13 @@ Once comfortable with this version, you can progress to:
 **Problem**: Cannot connect to PostgreSQL
 
 **Solutions**:
-1. Verify database connection string in `database.py` is correct
-2. Ensure PostgreSQL is running
-3. Check database and schema exist
-4. For Neon.tech, ensure `?sslmode=require` is included in connection string
-5. Verify network connectivity if using remote database
+1. Verify `DATABASE_URL` in your `.env` file is correct
+2. Ensure `.env` file exists (copy from `.env.example` if needed)
+3. Ensure PostgreSQL is running
+4. Check database and schema exist
+5. For Neon.tech or cloud databases, ensure `?sslmode=require` is included in connection string
+6. Verify network connectivity if using remote database
+7. Make sure `python-dotenv` is installed: `pip install python-dotenv`
 
 ### Table Creation Issues
 

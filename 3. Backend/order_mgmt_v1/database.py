@@ -6,10 +6,27 @@ This module handles:
 - Base class for ORM models
 - Table creation on initialization
 """
+import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from dotenv import load_dotenv
 
-engine = create_engine('postgresql://db_user:db_password@ep-jolly-feather-adyuujqy-pooler.c-2.us-east-1.aws.neon.tech:5432/postgres')
+# Load environment variables from .env file
+load_dotenv()
+
+# Get database URL from environment variable
+# If DATABASE_URL is not set, it will raise an error
+database_url = os.getenv('DATABASE_URL')
+
+if not database_url:
+    raise ValueError(
+        "DATABASE_URL environment variable is not set. "
+        "Please create a .env file based on .env.example and set your database connection string."
+    )
+
+# Create SQLAlchemy engine using the connection string from .env
+engine = create_engine(database_url)
+
 
 # ============================================================================
 # Get Database Session

@@ -1,0 +1,171 @@
+{
+	"info": {
+		"_postman_id": "order-mgmt-api-collection",
+		"name": "Order Management API - v1",
+		"description": "Simple Flask API for order management system - learning purposes",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "List All Users",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8021/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8021",
+					"path": [
+						"users"
+					]
+				},
+				"description": "List all users in the database"
+			},
+			"response": []
+		},
+		{
+			"name": "List All Products",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8021/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8021",
+					"path": [
+						"products"
+					]
+				},
+				"description": "List all products in the database"
+			},
+			"response": []
+		},
+		{
+			"name": "List Orders for User",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8021/orders?user_id=1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8021",
+					"path": [
+						"orders"
+					],
+					"query": [
+						{
+							"key": "user_id",
+							"value": "1",
+							"description": "The ID of the user whose orders to retrieve"
+						}
+					]
+				},
+				"description": "List all orders for a specific user. Requires user_id query parameter."
+			},
+			"response": []
+		},
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"email\": \"john@example.com\",\n  \"full_name\": \"John Doe\"\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8021/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8021",
+					"path": [
+						"users"
+					]
+				},
+				"description": "Create a new user in the database"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Product",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"name\": \"MacBook Pro 16\\\"\",\n  \"price_cents\": 249999\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8021/products",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8021",
+					"path": [
+						"products"
+					]
+				},
+				"description": "Create a new product. Price is in cents (e.g., 249999 = $2499.99)"
+			},
+			"response": []
+		},
+		{
+			"name": "Create Order",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"user_id\": 1,\n  \"status\": \"pending\",\n  \"items\": [\n    {\n      \"product_id\": 1,\n      \"quantity\": 2\n    },\n    {\n      \"product_id\": 2,\n      \"quantity\": 1\n    }\n  ]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8021/orders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8021",
+					"path": [
+						"orders"
+					]
+				},
+				"description": "Create a new order with multiple items. Status can be: pending, paid, shipped, cancelled"
+			},
+			"response": []
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8021",
+			"type": "string"
+		}
+	]
+}
