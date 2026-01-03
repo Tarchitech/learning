@@ -75,15 +75,10 @@
         <a href="{{ url_for('index') }}" class="btn">Home</a>
         <a href="{{ url_for('users_page') }}" class="btn">Users</a>
         <a href="{{ url_for('new_user') }}" class="btn">Create User</a>
+        <a href="{{ url_for('products_page') }}" class="btn">Products</a>
     </nav>
     
     <div class="content">
-        {# 
-            Flash messages display
-            - get_flashed_messages() retrieves messages set by flash()
-            - with_categories=true means also get message categories (success/error)
-        #}
-        
         {# 
             Jinja2 Syntax: {% block content %}
             - Defines a content block that child templates can fill

@@ -1,0 +1,83 @@
+{# Inherit from base.html template #}
+{% extends "base.html" %}
+
+{# Set page title #}
+{% block title %}Products - {{ super() }}{% endblock %}
+
+{# Page content #}
+{% block content %}
+<h1>Products List</h1>
+{# 
+    <h1>Create New Product</h1>
+    
+    <a href="{{ url_for('products_page') }}" class="btn">← Back to Products</a>
+#}
+
+{# 
+    Jinja2 Syntax: {% if users %}
+    Conditional logic:
+    - If products list is not empty, display product table
+    - If products list is empty, display message
+#}
+{% if products %}
+    {# 
+        Jinja2 Syntax: {{ total }}
+        Output variable:
+        - total is a variable passed from Flask route
+        - In route: render_template('products.html', total=total)
+    #}
+    <p><strong>Total Products:</strong> {{ total }}</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# 
+                Jinja2 Syntax: {% for product in products %}
+                Loop iteration:
+                - products is a list passed from Flask route
+                - In each iteration, product variable represents one product from the list
+                - Inside loop, can use {{ product.id }}, {{ product.name }}, {{ product.price_cents }}, etc.
+            #}
+            {% for product in products %}
+            <tr>
+                {# 
+                    Output product object properties
+                    - product.id: Product ID
+                    - product.name: Product name
+                    - product.price_cents: Product price in cents
+                    - product.created_at: Creation time
+                #}
+                <td>{{ product.id }}</td>
+                <td><strong>{{ product.name }}</strong></td>
+                <td>${{ product.price_cents/100 }}</td>
+                <td>{{ product.created_at }}</td>
+            </tr>
+            {% endfor %}
+            {# 
+                Loop end marker
+                - {% endfor %} must be paired with {% for %}
+            #}
+        </tbody>
+    </table>
+{% else %}
+    {# If products list is empty, display this message #}
+    <p style="color: #999;">No products found. <a href="{{ url_for('new_product') }}">Create the first product!</a></p>
+{% endif %}
+{# Conditional logic end marker #}
+{# {% endif %} must be paired with {% if %} #}
+
+<h2>Jinja2 Syntax Summary:</h2>
+<ul>
+    <li><strong>Variables:</strong> {% raw %}{{ product.name }}{% endraw %} - Output variable value</li>
+    <li><strong>Loops:</strong> {% raw %}{% for product in products %}{% endraw %} - Iterate over list</li>
+    <li><strong>Conditions:</strong> {% raw %}{% if products %}{% endraw %} - Conditional logic</li>
+    <li><strong>URL:</strong> {% raw %}{{ url_for('new_product') }}{% endraw %} - Generate URL</li>
+</ul>
+{% endblock %}
