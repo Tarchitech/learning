@@ -48,10 +48,10 @@ def api_list_users():
     curl -X GET http://localhost:8021/users
     """
     # Call database operation function (no parameters needed)
-    
+    result = list_users()
     
     # Return result as JSON response
-    return "Empty list of users", 200
+    return jsonify(result), 200
 
 
 @app.route('/products', methods=['GET'])
@@ -71,10 +71,10 @@ def api_list_products():
     curl -X GET http://localhost:8021/products
     """
     # Call database operation function (no parameters needed)
-    
+    result = list_products()
     
     # Return result as JSON response
-    return "Empty list of products", 200
+    return jsonify(result), 200
 
 
 @app.route('/orders', methods=['GET'])
@@ -98,13 +98,13 @@ def api_list_orders():
     """
     # Get user_id from query parameters
     # request.args is a dictionary of query parameters
-    
+    user_id = request.args.get('user_id', type=int)
     
     # Call database operation function with user_id
-    
+    result = list_orders(user_id)
     
     # Return result as JSON response
-    return "Empty list of orders", 200
+    return jsonify(result), 200
 
 
 # ============================================================================
@@ -130,18 +130,17 @@ def api_create_user():
       -d '{"email": "john@example.com", "full_name": "John Doe"}'
     """
     # Get JSON data from request body
-    
-    
+    data = request.get_json()
     
     # Extract email and full_name from request data
-    
-    
+    email = data['email']
+    full_name = data['full_name']
     
     # Call database operation function
-    
+    result = create_user(email, full_name)
     
     # Return result as JSON response
-    return "User created successfully", 201
+    return jsonify(result), 201
 
 
 @app.route('/products', methods=['POST'])
@@ -165,17 +164,17 @@ def api_create_product():
       -d '{"name": "MacBook Pro 16\\"", "price_cents": 249999}'
     """
     # Get JSON data from request body
-    
-    
+    data = request.get_json()
     
     # Extract name and price_cents from request data
+    name = data['name']
+    price_cents = data['price_cents']
     
-
     # Call database operation function
-
+    result = create_product(name, price_cents)
     
     # Return result as JSON response
-    return "Product created successfully", 201
+    return jsonify(result), 201
 
 
 @app.route('/orders', methods=['POST'])
@@ -207,20 +206,18 @@ def api_create_order():
       -d '{"user_id": 1, "status": "pending", "items": [{"product_id": 1, "quantity": 2}, {"product_id": 2, "quantity": 1}]}'
     """
     # Get JSON data from request body
-    
-    
+    data = request.get_json()
     
     # Extract order details from request data
-    
-    
+    user_id = data['user_id']
+    status = data['status']
+    items = data['items']  # List of items with product_id and quantity
     
     # Call database operation function
+    result = create_order(user_id, status, items)
     
-    
-        
     # Return result as JSON response
-    return "Order created successfully", 201
-
+    return jsonify(result), 201
 
 
 # ============================================================================

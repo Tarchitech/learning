@@ -1,0 +1,40 @@
+{# 
+    Jinja2 Syntax: {% extends "base.html" %}
+    - Inherits from base.html template
+    - Can use all blocks defined in base.html (like title, content)
+    - This is the core concept of template inheritance
+#}
+{% extends "base.html" %}
+
+{# 
+    Override the title block from base.html
+    - {{ super() }} calls the parent template's default value
+    - Final title: Home - Flask Template Example
+#}
+{% block title %}Home - {{ super() }}{% endblock %}
+
+{# Fill the content block from base.html #}
+{% block content %}
+<h1>Welcome to Flask Template Example</h1>
+
+<p>This is a simplified learning example demonstrating Flask + Jinja2 core concepts.</p>
+
+<h2>Core Concepts:</h2>
+<ul>
+    <li><strong>Template Inheritance:</strong> Use {% raw %}{% extends "base.html" %}{% endraw %} to inherit base template</li>
+    <li><strong>Variable Output:</strong> Use {% raw %}{{ variable }}{% endraw %} to output variables</li>
+    <li><strong>Loops:</strong> Use {% raw %}{% for item in items %}{% endraw %} to iterate lists</li>
+    <li><strong>Conditions:</strong> Use {% raw %}{% if condition %}{% endraw %} for conditional logic</li>
+</ul>
+
+<h2>Example Pages:</h2>
+<p>
+    {# 
+        url_for() generates URL
+        - 'users_page' is the route function name
+        - Generates: /users
+    #}
+    <a href="{{ url_for('users_page') }}" class="btn">View Users (Demo: Loops)</a>
+    <a href="{{ url_for('new_user') }}" class="btn">Create User (Demo: Forms)</a>
+</p>
+{% endblock %}

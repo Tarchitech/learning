@@ -1,0 +1,62 @@
+{# Inherit from base.html template #}
+{% extends "base.html" %}
+
+{# Set page title #}
+{% block title %}Create User - {{ super() }}{% endblock %}
+
+{# Page content #}
+{% block content %}
+
+<h1>Create New User</h1>
+
+<a href="{{ url_for('users_page') }}" class="btn">← Back to Users</a>
+
+
+{# 
+    HTML Form
+    - method="POST": Form submission method is POST
+    - action="{{ url_for('new_user') }}": Submit to /users/new route
+    - When user clicks submit button, browser sends POST request to /users/new
+#}
+<form method="POST" action="{{ url_for('new_user') }}">
+    {# 
+        Form field 1: Email
+        - name="email": Field name, retrieved in Flask using request.form.get('email')
+        - type="email": HTML5 email input type, browser validates format
+        - required: Required field
+    #}
+    <div style="margin: 15px 0;">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required placeholder="user@example.com">
+    </div>
+    
+    {# 
+        Form field 2: Full Name
+        - name="full_name": Field name, retrieved in Flask using request.form.get('full_name')
+        - type="text": Text input
+        - required: Required field
+    #}
+    <div style="margin: 15px 0;">
+        <label for="full_name">Full Name:</label>
+        <input type="text" id="full_name" name="full_name" required placeholder="John Doe">
+    </div>
+    
+    {# 
+        Submit button
+        - type="submit": Submits form when clicked
+        - After submission, browser sends POST request to form's action URL
+    #}
+    <button type="submit" class="btn">Create User</button>
+</form>
+
+<h2>Form Processing Flow:</h2>
+<ol>
+    <li><strong>GET Request:</strong> User visits /users/new, form is displayed (current page)</li>
+    <li><strong>User Input:</strong> User enters email and full name</li>
+    <li><strong>POST Request:</strong> User clicks "Create User" button, form is submitted</li>
+    <li><strong>Flask Processing:</strong> In new_user() function, request.method == 'POST'</li>
+    <li><strong>Get Data:</strong> request.form.get('email') and request.form.get('full_name')</li>
+    <li><strong>Create User:</strong> Call create_user() function</li>
+    <li><strong>Redirect:</strong> redirect(url_for('users_page')) redirects to users list</li>
+</ol>
+{% endblock %}

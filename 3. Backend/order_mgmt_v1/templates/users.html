@@ -1,0 +1,81 @@
+{# Inherit from base.html template #}
+{% extends "base.html" %}
+
+{# Set page title #}
+{% block title %}Users - {{ super() }}{% endblock %}
+
+{# Page content #}
+{% block content %}
+<h1>Users List</h1>
+
+{# Create user button - link to new_user route #}
+<a href="{{ url_for('new_user') }}" class="btn">➕ Create New User</a>
+
+{# 
+    Jinja2 Syntax: {% if users %}
+    Conditional logic:
+    - If users list is not empty, display user table
+    - If users list is empty, display message
+#}
+{% if users %}
+    {# 
+        Jinja2 Syntax: {{ total }}
+        Output variable:
+        - total is a variable passed from Flask route
+        - In route: render_template('users.html', total=total)
+    #}
+    <p><strong>Total Users:</strong> {{ total }}</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Created At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {# 
+                Jinja2 Syntax: {% for user in users %}
+                Loop iteration:
+                - users is a list passed from Flask route
+                - In each iteration, user variable represents one user from the list
+                - Inside loop, can use {{ user.id }}, {{ user.email }}, etc.
+            #}
+            {% for user in users %}
+            <tr>
+                {# 
+                    Output user object properties
+                    - user.id: User ID
+                    - user.full_name: User full name
+                    - user.email: User email
+                    - user.created_at: Creation time
+                #}
+                <td>{{ user.id }}</td>
+                <td><strong>{{ user.full_name }}</strong></td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.created_at }}</td>
+            </tr>
+            {% endfor %}
+            {# 
+                Loop end marker
+                - {% endfor %} must be paired with {% for %}
+            #}
+        </tbody>
+    </table>
+{% else %}
+    {# If users list is empty, display this message #}
+    <p style="color: #999;">No users found. <a href="{{ url_for('new_user') }}">Create the first user!</a></p>
+{% endif %}
+{# Conditional logic end marker #}
+{# {% endif %} must be paired with {% if %} #}
+
+<h2>Jinja2 Syntax Summary:</h2>
+<ul>
+    <li><strong>Variables:</strong> {% raw %}{{ user.full_name }}{% endraw %} - Output variable value</li>
+    <li><strong>Loops:</strong> {% raw %}{% for user in users %}{% endraw %} - Iterate over list</li>
+    <li><strong>Conditions:</strong> {% raw %}{% if users %}{% endraw %} - Conditional logic</li>
+    <li><strong>URL:</strong> {% raw %}{{ url_for('new_user') }}{% endraw %} - Generate URL for new_user route</li>
+</ul>
+{% endblock %}
