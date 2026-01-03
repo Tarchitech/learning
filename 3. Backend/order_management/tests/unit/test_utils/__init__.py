@@ -1,2 +1,0 @@
-"""Utils unit tests."""
-

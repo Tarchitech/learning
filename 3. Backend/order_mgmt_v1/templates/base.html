@@ -83,15 +83,6 @@
             - get_flashed_messages() retrieves messages set by flash()
             - with_categories=true means also get message categories (success/error)
         #}
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
-                {% for category, message in messages %}
-                    <div class="alert alert-{{ category }}">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
-        {% endwith %}
         
         {# 
             Jinja2 Syntax: {% block content %}
