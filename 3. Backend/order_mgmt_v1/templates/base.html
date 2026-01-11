@@ -80,6 +80,22 @@
     
     <div class="content">
         {# 
+            Jinja2 Syntax: {% with messages = get_flashed_messages(with_categories=true) %}
+            - get_flashed_messages() retrieves all flash messages from the session
+            - with_categories=true includes the category (e.g., 'success', 'error') with each message
+            - This block displays flash messages at the top of the page
+        #}
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {# 
             Jinja2 Syntax: {% block content %}
             - Defines a content block that child templates can fill
             - Child templates use {% block content %}...{% endblock %} to fill this block

@@ -86,12 +86,9 @@ def new_user():
             result = create_user(email, full_name)
             # flash() displays temporary messages (success/error notifications)
             flash(f'User {full_name} created successfully!', 'success')
-            # redirect() redirects to users list page
-            return redirect(url_for('users_page'))
         except Exception as e:
             flash(f'Error: {str(e)}', 'error')
-            # On error, redirect back to form page
-            return redirect(url_for('new_user'))
+
     
     # GET request: Display form page
     # Render new_user.html template
