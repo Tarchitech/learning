@@ -1,0 +1,74 @@
+{# Inherit from base.html template #}
+{% extends "base.html" %}
+
+{# Set page title #}
+{% block title %}Orders - {{ super() }}{% endblock %}
+
+{# Page content #}
+{% block content %}
+<h1>Orders List</h1>
+
+<h2>Select User</h2>
+
+{# Form to select user #}
+<form method="POST" action="{{ url_for('orders_page') }}">
+    <div style="margin: 15px 0;">
+        <label for="user_id">User:</label>
+        <select id="user_id" name="user_id" required style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 3px;">
+            <option value="">-- Select User --</option>
+            {% for user in users %}
+            <option value="{{ user.id }}" {% if selected_user_id == user.id %}selected{% endif %}>
+                {{ user.full_name }} ({{ user.email }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    <button type="submit" class="btn">View Orders</button>
+</form>
+
+{# Display orders if user is selected #}
+{% if selected_user_id and orders %}
+    <h2>Orders for Selected User</h2>
+    <p><strong>Total Orders:</strong> {{ total }}</p>
+    
+    {# Loop through orders #}
+    {% for order in orders %}
+    <div style="margin: 30px 0; padding: 15px; border: 1px solid #ddd; border-radius: 5px;">
+        <h3>Order #{{ order.id }}</h3>
+        <p>
+            <strong>Status:</strong> {{ order.status }}<br>
+            <strong>Total Quantity:</strong> {{ order.total_quantity }}<br>
+            <strong>Total Amount:</strong> ${{ "%.2f"|format(order.total_amount_cents / 100) }}<br>
+            <strong>Created At:</strong> {{ order.created_at }}
+        </p>
+        
+        {# Items table for this order #}
+        {% if order.items %}
+        <h4>Items:</h4>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Quantity</th>
+                    <th>Price at Purchase</th>
+                    <th>Subtotal</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order['items'] %}
+                <tr>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.quantity }}</td>
+                    <td>${{ "%.2f"|format(item.price_cents_at_purchase / item.quantity / 100) }}</td>
+                    <td>${{ "%.2f"|format(item.price_cents_at_purchase / 100) }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    </div>
+    {% endfor %}
+{% elif selected_user_id %}
+    <p style="color: #999;">No orders found for selected user.</p>
+{% endif %}
+{% endblock %}

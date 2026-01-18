@@ -8,8 +8,8 @@ Core Concepts:
 4. Data is passed to templates via render_template() second parameter
 """
 
-from flask import Flask, render_template, request, redirect, url_for, flash
-from db_operations import list_users, create_user, list_products
+from flask import Flask, render_template, request, redirect, url_for, flash, session
+from db_operations import list_users, create_user, list_products, list_orders
 
 # Create Flask application instance
 app = Flask(__name__)
@@ -86,8 +86,10 @@ def new_user():
             result = create_user(email, full_name)
             # flash() displays temporary messages (success/error notifications)
             flash(f'User {full_name} created successfully!', 'success')
+            return redirect(url_for('users_page'))
         except Exception as e:
             flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('new_user'))
 
     
     # GET request: Display form page
@@ -120,6 +122,55 @@ def products_page():
         products=products,      # Variable passed to template
         total=total,        # Variable passed to template
         title='Products List' # Variable passed to template
+    )
+
+
+# ============================================================================
+# Route 5: Orders List - Select user first, then list orders
+# ============================================================================
+@app.route('/orders', methods=['GET', 'POST'])
+def orders_page():
+    """
+    Orders list page
+    
+    Workflow:
+    1. User selects a user from dropdown
+    2. Get orders data for selected user from database
+    3. Pass data to template
+    4. Template displays orders list
+    """
+    # Get users for dropdown
+    users_result = list_users()
+    users = users_result.get('users', [])
+    
+    # Handle POST request (user selection)
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        
+        if user_id:
+            user_id = int(user_id)
+            # Get orders for selected user
+            result = list_orders(user_id)
+            orders = result.get('orders', [])
+            total = result.get('total', 0)
+            
+            return render_template(
+                'orders.html',
+                users=users,
+                orders=orders,
+                total=total,
+                selected_user_id=user_id,
+                title='Orders List'
+            )
+    
+    # GET request: Show user selection form
+    return render_template(
+        'orders.html',
+        users=users,
+        orders=[],
+        total=0,
+        selected_user_id=None,
+        title='Orders List'
     )
 
 
