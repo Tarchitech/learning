@@ -99,6 +99,36 @@ def new_user():
 
 
 # ============================================================================
+# Route 4: Products List - Demonstrates loops and conditionals
+# ============================================================================
+@app.route('/products')
+def products_page():
+    """
+    Products list page
+    
+    Workflow:
+    1. Get user data from database
+    2. Pass data to template
+    3. Template uses Jinja2 syntax to render HTML
+    """
+    # Get user data from database
+    result = list_products()
+    products = result.get('products', [])  # List of products
+    print(products)
+    total = result.get('total', 0)    # Total number of products
+    print(total)   
+    
+    # Render template with data
+    # In template, can use: {{ products }}, {{ total }}, {{ title }}
+    return render_template(
+        'products.html',
+        products = products,      # Variable passed to template
+        total=total,        # Variable passed to template
+        title='Products List' # Variable passed to template
+    )
+
+
+# ============================================================================
 # Start Server
 # ============================================================================
 if __name__ == '__main__':
