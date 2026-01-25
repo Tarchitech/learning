@@ -1,0 +1,73 @@
+{# Inherit from base.html template #}
+{% extends "base.html" %}
+
+{# Set page title #}
+{% block title %}Create Order - {{ super() }}{% endblock %}
+
+{# Page content #}
+{% block content %}
+
+<h1>Create New Order</h1>
+
+<a href="{{ url_for('orders_page') }}" class="btn">← Back to Orders</a>
+
+{# 
+    Order Form
+    - User selects a user from dropdown
+    - User enters quantities for products they want to buy
+    - Submit creates order with all products where quantity > 0
+#}
+<form method="POST" action="{{ url_for('new_order') }}">
+    
+    {# User Selection Dropdown #}
+    <h2>Select User</h2>
+    <div style="margin: 15px 0;">
+        <label for="user_id">User:</label>
+        <select id="user_id" name="user_id" required style="width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 3px;">
+            <option value="">-- Select User --</option>
+            {% for user in users %}
+            <option value="{{ user.id }}">
+                {{ user.id }}: {{ user.full_name }} ({{ user.email }})
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+    
+    {# Products Table with Quantity Input #}
+    <h2>Select Products</h2>
+    <p style="color: #666;">Enter quantity for products you want to order (leave 0 to skip)</p>
+    
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Product Name</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.id }}</td>
+                <td><strong>{{ product.name }}</strong></td>
+                <td>${{ "%.2f"|format(product.price_cents / 100) }}</td>
+                <td>
+                    <input type="number" 
+                           name="qty_{{ product.id }}" 
+                           value="0" 
+                           min="0" 
+                           style="width: 80px; text-align: center;">
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    
+    {# Submit Button #}
+    <div style="margin: 20px 0;">
+        <button type="submit" class="btn">Place Order</button>
+    </div>
+</form>
+
+{% endblock %}

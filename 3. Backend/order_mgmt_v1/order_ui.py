@@ -9,7 +9,7 @@ Core Concepts:
 """
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from db_operations import list_users, create_user, list_products, list_orders, create_product
+from db_operations import list_users, create_user, list_products, list_orders, create_product, create_order
 
 # Create Flask application instance
 app = Flask(__name__)
@@ -203,6 +203,69 @@ def orders_page():
         selected_user_id=None,
         title='Orders List'
     )
+
+# ============================================================================
+# Route 7: Create Order - Simple order creation form
+# ============================================================================
+@app.route('/orders/new', methods=['GET', 'POST'])
+def new_order():
+    """
+    Create new order form
+    
+    Workflow:
+    - GET request: Display form with user dropdown and products table
+    - POST request: Handle form submission, create order with selected items
+    """
+    # Get users and products for the form
+    users_result = list_users()
+    users = users_result.get('users', [])
+    products_result = list_products()
+    products = products_result.get('products', [])
+    
+    # Handle POST request (form submission)
+    if request.method == 'POST':
+        user_id = request.form.get('user_id')
+        
+        if not user_id:
+            flash('Please select a user', 'error')
+            return redirect(url_for('new_order'))
+        
+        # Collect items with quantity > 0
+        items = []
+        for product in products:
+            quantity = request.form.get(f'qty_{product["id"]}', '0')
+            try:
+                qty = int(quantity)
+                if qty > 0:
+                    items.append({
+                        'product_id': product['id'],
+                        'quantity': qty
+                    })
+            except ValueError:
+                pass  # Skip invalid quantities
+        
+        if not items:
+            flash('Please select at least one product', 'error')
+            return redirect(url_for('new_order'))
+        
+        # Create order
+        try:
+            result = create_order(int(user_id), 'pending', items)
+            flash(f'Order #{result["id"]} for user #{user_id} in {result["status"]} Status created successfully!', 'success')
+            return redirect(url_for('orders_page'))
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('new_order'))
+    
+    # GET request: Display form page
+    return render_template(
+        'new_order.html',
+        users=users,
+        products=products,
+        title='Create Order'
+    )
+
+
 
 
 
