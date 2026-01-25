@@ -9,7 +9,7 @@ Core Concepts:
 """
 
 from flask import Flask, render_template, request, redirect, url_for, flash, session
-from db_operations import list_users, create_user, list_products, list_orders
+from db_operations import list_users, create_user, list_products, list_orders, create_product
 
 # Create Flask application instance
 app = Flask(__name__)
@@ -124,9 +124,40 @@ def products_page():
         title='Products List' # Variable passed to template
     )
 
+# ============================================================================
+# Route 5: Create Product
+# ============================================================================
+@app.route('/products/new', methods=['GET', 'POST'])
+def new_product():
+    """
+    Create new product form
+    
+    Workflow:
+    - GET request: Display form page
+    - POST request: Handle form submission, create product
+    """
+    # Handle POST request (form submission)
+    if request.method == 'POST':
+        # Get data from form
+        # request.form is a dictionary containing form fields
+        name = request.form.get('name')        # Get name field value
+        price = request.form.get('price')  # Get price field value
+
+        # Create product
+        try:
+            result = create_product(name, int(float(price)*100))
+            flash(f'Product {name} created successfully!', 'success')
+            return redirect(url_for('products_page'))
+        except Exception as e:
+            flash(f'Error: {str(e)}', 'error')
+            return redirect(url_for('new_product'))
+
+    # GET request: Display form page
+    return render_template('new_product.html', title='Create Product')
+
 
 # ============================================================================
-# Route 5: Orders List - Select user first, then list orders
+# Route 6: Orders List - Select user first, then list orders
 # ============================================================================
 @app.route('/orders', methods=['GET', 'POST'])
 def orders_page():
