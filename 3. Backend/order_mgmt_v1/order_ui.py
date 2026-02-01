@@ -13,7 +13,21 @@ from db_operations import list_users, create_user, list_products, list_orders, c
 
 # Create Flask application instance
 app = Flask(__name__)
-app.secret_key = 'secret-key-for-flash-messages'  # Required for flash messages
+# Secret key is required to sign session cookie; without it session data cannot be trusted.
+# In production use a random value from env (e.g. os.environ.get('SECRET_KEY')).
+app.secret_key = 'secret-key-for-session-data'
+
+
+@app.context_processor
+def inject_current_user():
+    """
+    Inject current_user into every template so we can show 'Logged in as ...' in the nav.
+    Session stores user_id and user_name after login; here we expose them as current_user.
+    """
+    user = None
+    if session.get('user_id') and session.get('user_name'):
+        user = {'id': session['user_id'], 'full_name': session['user_name']}
+    return dict(login_user=user)
 
 
 # ============================================================================
@@ -29,6 +43,39 @@ def index():
     - Second parameter title='Home' is passed to template, accessible as {{ title }}
     """
     return render_template('index.html', title='Home')
+
+
+# ============================================================================
+# Login - Check user in DB and save to session
+# ============================================================================
+@app.route('/login', methods=['POST'])
+def login():
+    """
+    Login: look up user by full_name (using list_users), save to session, show success/failure message.
+    Session is server-side state keyed by a cookie; after login we store user_id and user_name
+    so other routes and templates can know who is logged in without passing it in the URL.
+    """
+    user_name = request.form.get('user_name', '').strip()
+    users = list_users().get('users', [])
+    user = next((u for u in users if u['full_name'] == user_name), None) if user_name else None
+    if user:
+        # Store logged-in user in session; persisted in signed cookie, available on subsequent requests
+        session['user_id'] = user['id']
+        session['user_name'] = user['full_name']
+        flash('Login successful.', 'success')
+    else:
+        flash('Login failed. User not found.', 'error')
+    return redirect(url_for('index'))
+
+
+# ============================================================================
+# Logout - Clear session so user is no longer logged in
+# ============================================================================
+@app.route('/logout')
+def logout():
+    """Clear session so the user is logged out; redirect to home."""
+    session.clear()
+    return redirect(url_for('index'))
 
 
 # ============================================================================
@@ -194,13 +241,15 @@ def orders_page():
                 title='Orders List'
             )
     
-    # GET request: Show user selection form
+    # GET request: show user selection form; pre-select the logged-in user from session if any
+    # so the dropdown defaults to current user without requiring them to pick again
+    selected_user_id = session.get('user_id')
     return render_template(
         'orders.html',
         users=users,
         orders=[],
         total=0,
-        selected_user_id=None,
+        selected_user_id=selected_user_id,
         title='Orders List'
     )
 
@@ -257,11 +306,14 @@ def new_order():
             flash(f'Error: {str(e)}', 'error')
             return redirect(url_for('new_order'))
     
-    # GET request: Display form page
+    # GET request: display form; pre-select logged-in user from session so Create Order
+    # form opens with the current user already selected in the dropdown
+    selected_user_id = session.get('user_id')
     return render_template(
         'new_order.html',
         users=users,
         products=products,
+        selected_user_id=selected_user_id,
         title='Create Order'
     )
 
