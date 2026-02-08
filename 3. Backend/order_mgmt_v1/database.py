@@ -25,7 +25,15 @@ if not database_url:
     )
 
 # Create SQLAlchemy engine using the connection string from .env
-engine = create_engine(database_url)
+# pool_pre_ping=True: test connections before use so stale/closed SSL connections
+#   are discarded and replaced (avoids "SSL connection has been closed unexpectedly")
+# pool_recycle=300: recycle connections after 5 min so they don't get closed by
+#   the server while still in the pool (common with cloud Postgres)
+engine = create_engine(
+    database_url,
+    pool_pre_ping=True,
+    pool_recycle=300,
+)
 
 
 # ============================================================================
